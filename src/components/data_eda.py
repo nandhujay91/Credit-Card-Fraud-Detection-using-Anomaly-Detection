@@ -1,5 +1,5 @@
 import sys
-
+import seaborn as sns
 import pandas as pd
 
 from src.config.configuration import ConfigurationManager
@@ -37,6 +37,14 @@ class DataEDA:
 
             # Generate Visualizations
             DataVisualization.plot_class_distribution(df)
+            DataVisualization.plot_amount_distribution(df)
+            DataVisualization.plot_log_amount_distribution(df)
+            DataVisualization.plot_amount_boxplot(df)
+            DataVisualization.plot_amount_by_class(df)
+            DataVisualization.plot_time_distribution(df)
+            DataVisualization.plot_time_by_class(df)
+            DataVisualization.plot_correlation_heatmap(df)
+            DataVisualization.plot_feature_target_correlation(df)
 
             logger.info("=" * 60)
             logger.info("EDA Completed Successfully")
