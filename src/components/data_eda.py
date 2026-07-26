@@ -4,6 +4,7 @@ import pandas as pd
 
 from src.config.configuration import ConfigurationManager
 from src.eda.summary import DataSummary
+from src.eda.visualization import DataVisualization
 from src.exception.exception import CustomException
 from src.logger.logger import logger
 
@@ -34,6 +35,9 @@ class DataEDA:
             # Generate Dataset Summary
             DataSummary.generate_summary(df)
 
+            # Generate Visualizations
+            DataVisualization.plot_class_distribution(df)
+
             logger.info("=" * 60)
             logger.info("EDA Completed Successfully")
             logger.info("=" * 60)
@@ -46,5 +50,4 @@ class DataEDA:
 if __name__ == "__main__":
 
     eda = DataEDA()
-
     eda.perform_eda()
