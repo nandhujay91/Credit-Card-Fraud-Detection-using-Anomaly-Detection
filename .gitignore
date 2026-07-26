@@ -1,0 +1,37 @@
+# Virtual Environment
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# Data
+data/raw/
+data/interim/
+data/processed/
+
+# Models
+models/
+
+# Logs
+logs/
+
+# MLflow
+mlruns/
+
+# Pytest
+.pytest_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
