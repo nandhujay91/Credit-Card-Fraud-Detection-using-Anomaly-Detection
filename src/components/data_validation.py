@@ -1,19 +1,19 @@
-import os
 import sys
 
 import pandas as pd
 
+from src.config.configuration import ConfigurationManager
 from src.exception.exception import CustomException
 from src.logger.logger import logger
 
 
 class DataValidation:
     """
-    Performs basic validation on the training dataset.
+    Performs validation on the training dataset.
     """
 
-    def __init__(self, train_data_path: str):
-        self.train_data_path = train_data_path
+    def __init__(self):
+        self.config = ConfigurationManager().get_data_ingestion_config()
 
     def validate_dataset(self):
         """
@@ -21,24 +21,22 @@ class DataValidation:
         """
 
         try:
+            logger.info("=" * 50)
             logger.info("Starting Data Validation")
+            logger.info("=" * 50)
 
-            # Check file exists
-            if not os.path.exists(self.train_data_path):
-                raise FileNotFoundError(
-                    f"Dataset not found: {self.train_data_path}"
-                )
+            # Read training dataset
+            df = pd.read_csv(self.config.train_data_path)
 
-            logger.info("Dataset file exists.")
-
-            # Read dataset
-            df = pd.read_csv(self.train_data_path)
-
-            logger.info(f"Dataset loaded successfully. Shape: {df.shape}")
+            logger.info(
+                f"Training dataset loaded successfully. Shape: {df.shape}"
+            )
 
             # Check target column
             if "Class" not in df.columns:
-                raise ValueError("Target column 'Class' not found.")
+                raise ValueError(
+                    "Target column 'Class' is missing."
+                )
 
             logger.info("Target column 'Class' found.")
 
@@ -55,14 +53,22 @@ class DataValidation:
             # Check duplicate rows
             duplicate_rows = df.duplicated().sum()
 
-            logger.info(f"Duplicate rows: {duplicate_rows}")
-
-            # Check dataset shape
             logger.info(
-                f"Rows: {df.shape[0]}, Columns: {df.shape[1]}"
+                f"Duplicate rows found: {duplicate_rows}"
             )
 
+            # Dataset dimensions
+            logger.info(
+                f"Rows: {df.shape[0]}"
+            )
+
+            logger.info(
+                f"Columns: {df.shape[1]}"
+            )
+
+            logger.info("=" * 50)
             logger.info("Data Validation completed successfully.")
+            logger.info("=" * 50)
 
             return True
 
@@ -73,12 +79,6 @@ class DataValidation:
 
 if __name__ == "__main__":
 
-    train_path = os.path.join(
-        "artifacts",
-        "data_ingestion",
-        "train.csv"
-    )
-
-    validator = DataValidation(train_path)
+    validator = DataValidation()
 
     validator.validate_dataset()
