@@ -12,19 +12,26 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
-# Environment variables
+# Environment Variables
 .env
 
 # Data
-data/raw/
-data/interim/
-data/processed/
+data/raw/*
+!data/raw/.gitkeep
+
+data/interim/*
+!data/interim/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
 
 # Models
-models/
+models/*
+!models/.gitkeep
 
 # Logs
-logs/
+logs/*
+!logs/.gitkeep
 
 # MLflow
 mlruns/
