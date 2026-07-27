@@ -112,3 +112,55 @@ Credit-Card-Fraud-Detection-using-Anomaly-Detection/
 # Author
 
 Nandini Arjunan
+
+## 📊 Model Performance Comparison
+
+The project first trains baseline anomaly detection models using default parameters. Hyperparameter optimization is then performed using **Optuna** to improve model performance.
+
+### Baseline vs Tuned Isolation Forest
+
+| Metric | Baseline Model | Tuned Model (Optuna) |
+|---------|---------------:|---------------------:|
+| Accuracy | 96.13% | **99.68%** |
+| Precision | 3.33% | **26.06%** |
+| Recall | **77.92%** | 48.05% |
+| F1 Score | 6.39% | **33.79%** |
+| ROC AUC | **87.04%** | 73.91% |
+
+### Interpretation
+
+The baseline Isolation Forest achieved a high recall, detecting approximately **78%** of fraudulent transactions. However, its precision was only **3.33%**, meaning it generated a large number of false positive alerts.
+
+After hyperparameter optimization with **Optuna**, the model became more selective:
+
+- Accuracy improved from **96.13%** to **99.68%**.
+- Precision increased from **3.33%** to **26.06%**, significantly reducing false positive predictions.
+- F1 Score improved from **6.39%** to **33.79%**, providing a much better balance between precision and recall.
+- Recall decreased from **77.92%** to **48.05%**, indicating that the tuned model detects fewer fraud cases but produces fewer false alarms.
+
+This reflects the typical **precision–recall trade-off** encountered in anomaly detection systems.
+
+### Final Model Selection
+
+The project uses **F1 Score** as the primary model selection criterion because it balances both precision and recall on highly imbalanced fraud detection datasets.
+
+Based on this criterion, the **tuned Isolation Forest** was selected as the final production model.
+
+### Best Model Metrics
+
+| Metric | Value |
+|---------|------:|
+| Model | Isolation Forest |
+| Accuracy | **99.68%** |
+| Precision | **26.06%** |
+| Recall | **48.05%** |
+| F1 Score | **33.79%** |
+| ROC AUC | **73.91%** |
+
+---
+
+**Why F1 Score instead of Accuracy?**
+
+Credit card fraud datasets are highly imbalanced, with fraudulent transactions representing only a small fraction of all transactions. A model can achieve very high accuracy simply by predicting most transactions as normal.
+
+For this reason, **F1 Score** is used as the primary optimization and model selection metric because it provides a balanced evaluation of both fraud detection capability (recall) and prediction reliability (precision).

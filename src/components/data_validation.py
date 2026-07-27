@@ -1,3 +1,4 @@
+import os
 import sys
 
 import pandas as pd
@@ -15,62 +16,128 @@ class DataValidation:
     def __init__(self):
         self.config = ConfigurationManager().get_data_ingestion_config()
 
+        self.validated_data_path = os.path.join(
+            "data",
+            "interim",
+            "validated_creditcard.csv",
+        )
+
     def validate_dataset(self):
         """
-        Validate the training dataset.
+        Validate the training dataset and
+        save the validated dataset.
         """
 
         try:
-            logger.info("=" * 50)
+
+            logger.info("=" * 60)
             logger.info("Starting Data Validation")
-            logger.info("=" * 50)
+            logger.info("=" * 60)
 
-            # Read training dataset
-            df = pd.read_csv(self.config.train_data_path)
+            # =====================================================
+            # Load Dataset
+            # =====================================================
 
-            logger.info(
-                f"Training dataset loaded successfully. Shape: {df.shape}"
+            df = pd.read_csv(
+                self.config.train_data_path
             )
 
-            # Check target column
+            logger.info(
+                "Training dataset loaded successfully."
+            )
+
+            logger.info(
+                "Dataset Shape : %s",
+                df.shape,
+            )
+
+            # =====================================================
+            # Validate Target Column
+            # =====================================================
+
             if "Class" not in df.columns:
                 raise ValueError(
                     "Target column 'Class' is missing."
                 )
 
-            logger.info("Target column 'Class' found.")
+            logger.info(
+                "Target column 'Class' found."
+            )
 
-            # Check missing values
-            missing_values = df.isnull().sum().sum()
+            # =====================================================
+            # Validate Missing Values
+            # =====================================================
+
+            missing_values = int(
+                df.isnull().sum().sum()
+            )
 
             if missing_values > 0:
                 raise ValueError(
                     f"Dataset contains {missing_values} missing values."
                 )
 
-            logger.info("No missing values found.")
-
-            # Check duplicate rows
-            duplicate_rows = df.duplicated().sum()
-
             logger.info(
-                f"Duplicate rows found: {duplicate_rows}"
+                "No missing values found."
             )
 
-            # Dataset dimensions
-            logger.info(
-                f"Rows: {df.shape[0]}"
+            # =====================================================
+            # Check Duplicate Rows
+            # =====================================================
+
+            duplicate_rows = int(
+                df.duplicated().sum()
             )
 
             logger.info(
-                f"Columns: {df.shape[1]}"
+                "Duplicate rows found : %s",
+                duplicate_rows,
             )
 
-            logger.info("=" * 50)
-            logger.info("Data Validation completed successfully.")
-            logger.info("=" * 50)
+            # =====================================================
+            # Dataset Information
+            # =====================================================
 
-            return True
+            logger.info(
+                "Rows : %s",
+                df.shape[0],
+            )
+
+            logger.info(
+                "Columns : %s",
+                df.shape[1],
+            )
+
+            # =====================================================
+            # Save Validated Dataset
+            # =====================================================
+
+            os.makedirs(
+                os.path.dirname(
+                    self.validated_data_path
+                ),
+                exist_ok=True,
+            )
+
+            df.to_csv(
+                self.validated_data_path,
+                index=False,
+            )
+
+            logger.info(
+                "Validated dataset saved successfully."
+            )
+
+            logger.info(
+                "Location : %s",
+                self.validated_data_path,
+            )
+
+            logger.info("=" * 60)
+            logger.info("Data Validation Completed Successfully")
+            logger.info("=" * 60)
+
+            return df
 
         except Exception as e:
             logger.error(str(e))
